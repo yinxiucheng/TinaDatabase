@@ -1,5 +1,7 @@
 package tina.com.db;
 
+import java.util.List;
+
 /**
  * @author yxc
  * @date 2018/11/13
@@ -10,7 +12,7 @@ public interface IBaseDao<T> {
 
     long update(T entity, T where);
 
-    long delete(T entity);
+    int delete(T where);
 
-    long query();
+    List<T> query(T where);
 }

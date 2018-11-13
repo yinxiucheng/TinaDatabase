@@ -6,8 +6,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -163,16 +165,17 @@ public class BaseDao<T> implements IBaseDao<T> {
         ContentValues contentValues = new ContentValues();
         Set keys = map.keySet();
         Iterator<String> iterator = keys.iterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             String key = iterator.next();
             String value = map.get(key);
-            if (null != value){
+            if (null != value) {
                 contentValues.put(key, value);
             }
         }
         return contentValues;
     }
 
+    //字段-----成员变量         getValues后， 字段-------值
     private Map<String, String> getValues(T entity) {
         HashMap<String, String> map = new HashMap<>();
         //返回的是所有的字段
@@ -199,7 +202,7 @@ public class BaseDao<T> implements IBaseDao<T> {
                     key = field.getName();
                 }
 
-                if (!TextUtils.isEmpty(key) && !TextUtils.isEmpty(value)){
+                if (!TextUtils.isEmpty(key) && !TextUtils.isEmpty(value)) {
                     map.put(key, value);
                 }
 
@@ -212,17 +215,57 @@ public class BaseDao<T> implements IBaseDao<T> {
 
     @Override
     public long update(T entity, T where) {
-        return 0;
+//        sqLiteDatabase.update(tableName, contentValues, "name=?", new String[]{"Tina"});
+        int result = -1;
+        Map values = getValues(entity);
+        ContentValues contentValues = getContentValues(values);
+        Map whereCause = getValues(where);
+        Condition condition = new Condition(whereCause);
+        result = sqLiteDatabase.update(tableName, contentValues, condition.whereCause, condition.whereArgs);
+        return result;
     }
 
     @Override
-    public long delete(T entity) {
-        return 0;
+    public int delete(T entity) {
+//        sqLiteDatabase.delete(tableName, "name=?", new String[]{"Tina"});
+        int result = -1;
+        Map whereCause = getValues(entity);
+        Condition condition = new Condition(whereCause);
+        result = sqLiteDatabase.delete(tableName, condition.whereCause, condition.whereArgs);
+        return result;
     }
 
     @Override
-    public long query() {
-        return 0;
+    public List<T> query(T where) {
+        return null;
     }
+
+
+    private class Condition {
+        private String whereCause; //"name=?"
+        private String[] whereArgs; //new String[]{"Tina"}
+
+        public Condition(Map<String, String> whereCause) {
+            ArrayList list = new ArrayList();// whereArgs 的内容存入 list
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("1==1");
+
+            Set keys = whereCause.keySet();
+            Iterator iterator = keys.iterator();
+            while (iterator.hasNext()) {
+                String key = (String) iterator.next();
+                String value = whereCause.get(key);
+
+                if (null != value) {
+                    stringBuilder.append(" and " + key + "=? ");
+                    list.add(value);
+                }
+            }
+
+            this.whereCause = stringBuilder.toString();
+            this.whereArgs = (String[]) list.toArray(new String[list.size()]);
+        }
+    }
+
 
 }
