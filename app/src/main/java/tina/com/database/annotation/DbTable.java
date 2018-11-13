@@ -12,4 +12,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)//表示类
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DbTable {
+    String value();
 }
