@@ -11,25 +11,19 @@ import tina.com.database.annotation.DbTable;
 public class User {
 
     @DbField("_id")
-    private Integer id;
+    private String id;
     private String name;
 
     private String password;
+    private Integer status;
 
     public User(){}
 
-    public User(Integer id, String name, String password) {
+    public User(String id, String name, String password, Integer status) {
         this.id = id;
         this.name = name;
         this.password = password;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
+        this.status = status;
     }
 
     public String getName() {
@@ -48,12 +42,29 @@ public class User {
         this.password = password;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
+                ", status=" + status +
                 '}';
     }
 }

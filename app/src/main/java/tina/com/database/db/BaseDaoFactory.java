@@ -21,7 +21,7 @@ public class BaseDaoFactory {
 
     private SQLiteDatabase sqLiteDatabase;
 
-    private SQLiteDatabase subSqLiteDatabase;
+
 
     //定义建数据库的路径
     //写到SD卡中， 删除了数据还在
@@ -32,13 +32,12 @@ public class BaseDaoFactory {
     protected Map<String,BaseDao> map= Collections.synchronizedMap(new HashMap<String, BaseDao>());
     //定义
 
-    private BaseDaoFactory() {
+    protected BaseDaoFactory() {
         if (Environment.isExternalStorageEmulated()) {
             //可以先判断有没有SD卡
             sqliteDatabasePath = Environment.getExternalStorageDirectory() + "/tinadatabase/tina.db";
         }else{
             //可以先判断有没有SD卡
-
         }
         sqliteDatabasePath="data/data/tina.com.database/tina.db";
 //        sqliteDatabasePath = Environment.getDataDirectory() + "tina.db";

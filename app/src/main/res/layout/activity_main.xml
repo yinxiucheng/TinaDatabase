@@ -13,6 +13,14 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
+        android:text="用户登录"
+        android:onClick="login"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
         android:text="插入对象"
         android:onClick="insertObject"/>
 
@@ -39,5 +47,13 @@
         android:layout_marginTop="20dp"
         android:text="查询对象"
         android:onClick="queryObject"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:text="分库插入"
+        android:onClick="subInsert"/>
 
 </LinearLayout>
