@@ -10,9 +10,9 @@ import java.util.List;
 
 import tina.com.database.bean.Person;
 import tina.com.database.bean.User;
-import tina.com.db.BaseDao;
-import tina.com.db.BaseDaoFactory;
-import tina.com.db.BaseDaoNewImpl;
+import tina.com.database.db.BaseDao;
+import tina.com.database.db.BaseDaoFactory;
+import tina.com.database.db.BaseDaoNewImpl;
 
 public class MainActivity extends AppCompatActivity {
 

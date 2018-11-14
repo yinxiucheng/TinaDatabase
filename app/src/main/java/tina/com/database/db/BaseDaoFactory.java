@@ -21,6 +21,8 @@ public class BaseDaoFactory {
 
     private SQLiteDatabase sqLiteDatabase;
 
+    private SQLiteDatabase subSqLiteDatabase;
+
     //定义建数据库的路径
     //写到SD卡中， 删除了数据还在
     private String sqliteDatabasePath;
@@ -51,7 +53,7 @@ public class BaseDaoFactory {
         try {
             baseDao=daoClass.newInstance();
             baseDao.init(sqLiteDatabase,entityClass);
-            map.put(daoClass.getSimpleName(),baseDao);
+            map.put(daoClass.getSimpleName(), baseDao);
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
