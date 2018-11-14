@@ -12,6 +12,7 @@ import tina.com.database.bean.Person;
 import tina.com.database.bean.User;
 import tina.com.db.BaseDao;
 import tina.com.db.BaseDaoFactory;
+import tina.com.db.BaseDaoNewImpl;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,20 +23,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void insertObject(View view) {
-
-        BaseDao baseDao = BaseDaoFactory.getInstance().getBaseDao(User.class);
+        BaseDao baseDao = BaseDaoFactory.getInstance().getBaseDao(BaseDaoNewImpl.class, User.class);
         baseDao.insert(new User(19, "Tina1", "123456"));
         baseDao.insert(new User(1, "Tina", "123456"));
         baseDao.insert(new User(2, "Tina", "123456"));
 
-        BaseDao personDao = BaseDaoFactory.getInstance().getBaseDao(Person.class);
+        BaseDao personDao = BaseDaoFactory.getInstance().getBaseDao(BaseDaoNewImpl.class,Person.class);
         personDao.insert(new Person("Tina", 18));
 
         Toast.makeText(this, "执行成功", Toast.LENGTH_SHORT).show();
     }
 
     public void updateObject(View view) {
-        BaseDao baseDao = BaseDaoFactory.getInstance().getBaseDao(User.class);
+        BaseDao baseDao = BaseDaoFactory.getInstance().getBaseDao(BaseDaoNewImpl.class, User.class);
         User user = new User();
         user.setName("Tina");
 
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void deleteObject(View view) {
-        BaseDao baseDao = BaseDaoFactory.getInstance().getBaseDao(User.class);
+        BaseDao baseDao = BaseDaoFactory.getInstance().getBaseDao(BaseDaoNewImpl.class, User.class);
         User where = new User();
         where.setId(19);
         baseDao.delete(where);
@@ -57,9 +57,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     public void queryObject(View view) {
-        BaseDao baseDao= BaseDaoFactory.getInstance().getBaseDao(User.class);
+        BaseDao baseDao= BaseDaoFactory.getInstance().getBaseDao(BaseDaoNewImpl.class, User.class);
         User where=new User();
         where.setName("Tina1");
         List<User> list=baseDao.query(where);

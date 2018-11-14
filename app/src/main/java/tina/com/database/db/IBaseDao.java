@@ -1,4 +1,4 @@
-package tina.com.db;
+package tina.com.database.db;
 
 import java.util.List;
 

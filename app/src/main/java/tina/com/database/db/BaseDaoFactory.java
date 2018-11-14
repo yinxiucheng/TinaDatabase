@@ -1,7 +1,11 @@
-package tina.com.db;
+package tina.com.database.db;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author yxc
@@ -21,6 +25,11 @@ public class BaseDaoFactory {
     //写到SD卡中， 删除了数据还在
     private String sqliteDatabasePath;
 
+    //设计一个数据库连接池
+//    protected Map<String, BaseDao> map = new ConcurrentHashMap<>();
+    protected Map<String,BaseDao> map= Collections.synchronizedMap(new HashMap<String, BaseDao>());
+    //定义
+
     private BaseDaoFactory() {
         if (Environment.isExternalStorageEmulated()) {
             //可以先判断有没有SD卡
@@ -34,17 +43,21 @@ public class BaseDaoFactory {
         sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(sqliteDatabasePath, null);
     }
 
-    public <T> BaseDao<T> getBaseDao(Class<T> entityClass) {
-        BaseDao baseDao = null;
+    public  <T extends BaseDao<M>,M> T  getBaseDao(Class<T> daoClass,Class<M> entityClass){
+        BaseDao baseDao=null;
+        if(map.get(daoClass.getSimpleName())!=null){
+            return (T) map.get(daoClass.getSimpleName());
+        }
         try {
-            baseDao = BaseDao.class.newInstance();
-            baseDao.init(sqLiteDatabase, entityClass);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            baseDao=daoClass.newInstance();
+            baseDao.init(sqLiteDatabase,entityClass);
+            map.put(daoClass.getSimpleName(),baseDao);
         } catch (InstantiationException e) {
             e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
         }
-        return baseDao;
+        return (T)baseDao;
     }
 
 }
