@@ -15,4 +15,8 @@ public interface IBaseDao<T> {
     int delete(T where);
 
     List<T> query(T where);
+
+    List<T> query(T where, String orderBy, Integer startIndex, Integer limit);
+
+    List<T> query(String sql);
 }

@@ -235,10 +235,7 @@ public class BaseDao<T> implements IBaseDao<T> {
         return result;
     }
 
-    @Override
-    public List<T> query(T where) {
-        return null;
-    }
+
 
 
     private class Condition {
@@ -265,6 +262,89 @@ public class BaseDao<T> implements IBaseDao<T> {
             this.whereCause = stringBuilder.toString();
             this.whereArgs = (String[]) list.toArray(new String[list.size()]);
         }
+    }
+
+
+    @Override
+    public List<T> query(T where) {
+        return query(where, null, null, null);
+    }
+
+    @Override
+    public List<T> query(T where, String orderBy, Integer startIndex, Integer limit) {
+//        sqLiteDatabase.query(tableName, null, "id=?", new String[5], null, null, orderBy, "1, 5");
+
+        Map map = getValues(where);
+
+        String limitString = null;
+        if (startIndex != null && limit != null){
+            limitString = startIndex + ", " + limit;
+        }
+        Condition condition = new Condition(map);
+
+        Cursor cursor = sqLiteDatabase.query(tableName, null, condition.whereCause, condition.whereArgs,
+                null, null, orderBy, limitString);
+        //定义一个用来解析游标的方法
+        List<T> result = getResult(cursor, where);
+
+        return result;
+    }
+
+    //where 是用来表示User类的结构的
+    private List<T> getResult(Cursor cursor, T obj) {
+        ArrayList list = new ArrayList();
+        Object item = null;
+        while(cursor.moveToNext()){
+            try {
+                item = obj.getClass().newInstance();//new User();
+
+                Iterator iterator = cacheMap.entrySet().iterator();
+
+                while (iterator.hasNext()){
+                    Map.Entry entry = (Map.Entry) iterator.next();
+                    //取列名
+                    String columName = (String) entry.getKey();
+                    //然后以列名拿到列名在游标中的位置
+                    Integer columnIndex = cursor.getColumnIndex(columName);
+
+                    Field field = (Field) entry.getValue();
+
+                    Class type = field.getType();
+
+
+                    if(columnIndex!=-1){
+                        if(type==String.class){
+                            field.set(item,cursor.getString(columnIndex));
+                        }else if(type==Double.class){
+                            field.set(item,cursor.getDouble(columnIndex));
+                        }else if(type==Integer.class){
+                            field.set(item,cursor.getInt(columnIndex));
+                        }else if(type==Long.class){
+                            field.set(item,cursor.getLong(columnIndex));
+                        }else if(type==byte[].class){
+                            field.set(item,cursor.getBlob(columnIndex));
+                        }else{
+                            continue;
+                        }
+                    }
+
+                }
+                list.add(item);
+
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            }
+        }
+        cursor.close();
+        return  list;
+    }
+
+
+    @Override
+    public List<T> query(String sql) {
+        return null;
     }
 
 
