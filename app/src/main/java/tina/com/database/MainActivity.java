@@ -18,11 +18,13 @@ import tina.com.database.db.BaseDaoNewImpl;
 import tina.com.database.sub_db.BaseDaoSubFactory;
 import tina.com.database.sub_db.PhotoDao;
 import tina.com.database.sub_db.UserDao;
+import tina.com.database.update.UpdateManager;
 
 public class MainActivity extends AppCompatActivity {
 
     private int i;
     BaseDao userDao;
+    UpdateManager updateManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +99,17 @@ public class MainActivity extends AppCompatActivity {
         PhotoDao photoDao= BaseDaoSubFactory.getInstance().getSubDao(PhotoDao.class,Photo.class);
         photoDao.insert(photo);
         Toast.makeText(this,"执行成功!",Toast.LENGTH_SHORT).show();
+    }
+
+
+    public void write(View view){
+        updateManager.saveVersionInfo(this,"V003");
+    }
+
+
+    public void update(View view){
+        updateManager.checkThisVersionTable(this);
+        updateManager.startUpdateDb(this);
     }
 
 
