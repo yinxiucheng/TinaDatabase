@@ -1,7 +1,8 @@
 package tina.com.database.sub_db;
 
-import java.io.File;
+import android.os.Environment;
 
+import java.io.File;
 import tina.com.database.bean.User;
 import tina.com.database.db.BaseDaoFactory;
 
@@ -21,12 +22,11 @@ enum PrivateDataBaseEnums {
         if(userDao!=null){
             User currentUser=userDao.getCurrentUser();
             if(currentUser!=null){
-                File file=new File("/data/data/tina.com.database");
+                File file=new File(Environment.getExternalStorageDirectory(), "update/" + currentUser.getId());
                 if(!file.exists()){
                     file.mkdirs();
                 }
-                ///data/data/com.example.a48608.ls4_databaseframework_20180307/n0003_login.db
-                return file.getAbsolutePath()+"/"+currentUser.getId()+"_login.db";
+                return file.getAbsolutePath()+"/login.db";
             }
         }
         return null;

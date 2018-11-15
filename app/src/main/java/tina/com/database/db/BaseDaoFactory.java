@@ -2,7 +2,10 @@ package tina.com.database.db;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
+import android.util.Log;
+import android.widget.Toast;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,14 +36,17 @@ public class BaseDaoFactory {
     //定义
 
     protected BaseDaoFactory() {
-        if (Environment.isExternalStorageEmulated()) {
-            //可以先判断有没有SD卡
-            sqliteDatabasePath = Environment.getExternalStorageDirectory() + "/tinadatabase/tina.db";
-        }else{
-            //可以先判断有没有SD卡
+        if (!Environment.isExternalStorageEmulated()) {
+            Log.e("BaseDaoFactory", "没有外置卡");
+            return;
         }
-        sqliteDatabasePath="data/data/tina.com.database/tina.db";
-//        sqliteDatabasePath = Environment.getDataDirectory() + "tina.db";
+
+        File file = new File(Environment.getExternalStorageDirectory(), "update");
+        if (!file.exists()){
+            file.mkdir();
+        }
+
+        sqliteDatabasePath = file.getAbsolutePath() + "/user.db";
         sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(sqliteDatabasePath, null);
     }
 
